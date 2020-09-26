@@ -1,0 +1,115 @@
+﻿@model SagarPractical.ViewModels.clsPlayerViewModel
+@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<SelectListItem> lstRoles = new List<SelectListItem>();
+    lstRoles.Add(new SelectListItem() { Text = "Team coach", Value = "1" });
+    lstRoles.Add(new SelectListItem() { Text = "player", Value = "3" });
+
+
+    int intRegCount = (int)ViewBag.RegistationCount;
+    bool IsCoachAdded = (bool)ViewBag.CoachAdded;
+
+    
+}
+
+@section scripts
+{
+    <script src="~/Scripts/player.js"></script>
+    <script>
+        var IsCoachAdded = "@IsCoachAdded.ToString().ToLower()";
+    </script>
+}
+
+<h2>Player Register</h2>
+
+@if (intRegCount == 16 || intRegCount > 16)
+{
+    <div class="alert alert-warning"> Maximum reistarion are done </div>
+}
+
+@using (Html.BeginForm("Register", "Home", FormMethod.Post, new { @id = "frmPlayerRegister" }))
+{
+    <div class="row">
+        <div class="col col-lg-12">
+            <div class="form-group">
+                <label> Role</label>
+                @Html.DropDownListFor(m => m.role, lstRoles, new { @class = "form-control" })
+                <div id="roleError" class="invalid-feedback" style="color:red; display:none">please select Role</div>
+            </div>
+        </div>
+
+        <div class="col col-lg-6">
+            <div class="form-group">
+                <label> First Name</label>
+                @Html.TextBoxFor(m => m.firstname, new { @id = "firstname", @class = "form-control" })
+                <div id="firstnameError" class="invalid-feedback" style="color:red; display:none">please First Name</div>
+            </div>
+        </div>
+        <div class="col col-lg-6">
+            <div class="form-group">
+                <label> Last Name</label>
+                @Html.TextBoxFor(m => m.lastname, new { @id = "lastname", @class = "form-control" })
+                <div id="lastnameError" class="invalid-feedback" style="color:red; display:none">please Last Name</div>
+            </div>
+        </div>
+
+        <div class="col col-lg-6">
+            <div class="form-group">
+                <label> Total matches played </label>
+                @Html.TextBoxFor(m => m.totalmatchesplayed, new { @id = "totalmatchesplayed", @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="col col-lg-6">
+            <div class="form-group">
+                <label> Contact Number</label>
+                @Html.TextBoxFor(m => m.contactnumber, new { @id = "contactnumber", @class = "form-control" })
+                <div id="contactnumberError" class="invalid-feedback" style="color:red; display:none">please Contact Number</div>
+                <div id="contactnumberInvalidError" class="invalid-feedback" style="color:red; display:none">please Enter valid Contact Number</div>
+            </div>
+        </div>
+
+        <div class="col col-lg-6">
+            <div class="form-group">
+                <label> Email</label>
+                @Html.TextBoxFor(m => m.email, new { @id = "email", @class = "form-control" })
+                <div id="emailError" class="invalid-feedback" style="color:red; display:none">please Enter Email</div>
+                <div id="emailInvalidError" class="invalid-feedback" style="color:red; display:none">please Enter valid Email</div>
+            </div>
+        </div>
+
+        <div class="col col-lg-6">
+            <div class="form-group">
+                <label> Date Of Birth</label>
+                @Html.TextBoxFor(m => m.dateofBirth, new { @id = "dateofBirth", @class = "form-control" })
+                <div id="dateofBirthError" class="invalid-feedback" style="color:red; display:none">please enter Date of Birth</div>
+                <div id="dateofBirthInvalidError" class="invalid-feedback" style="color:red; display:none">please enter valid Date of Birth</div>
+            </div>
+        </div>
+
+        <div class="col col-lg-6">
+            <div class="form-group">
+                <label> Height</label>
+                @Html.TextBoxFor(m => m.playerheight, new { @id = "playerheight", @class = "form-control" })
+                <div id="heightError" class="invalid-feedback" style="color:red; display:none">please enter Confirm Password</div>
+            </div>
+        </div>
+
+        <div class="col col-lg-6">
+            <div class="form-group">
+                <label> Weight</label>
+                @Html.TextBoxFor(m => m.playerweight, new { @id = "playerweight", @class = "form-control" })
+                <div id="weightError" class="invalid-feedback" style="color:red; display:none">please enter Weight</div>
+            </div>
+        </div>
+
+    </div>
+    if (intRegCount != 16 || intRegCount < 16)
+    {
+        <div class="row" style="margin-top:5%">
+            <input type="submit" class="btn btn-default" id="btnSubmit" name="Submit" value="Submit" onclick="return ValidateRegistrationForm();" />
+        </div>
+    }
+}

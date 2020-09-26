@@ -1,0 +1,20 @@
+CREATE DATABASE cricket
+
+USE cricket
+
+CREATE TABLE player
+(
+	playerid int identity(1,1) primary key,
+	firstname varchar(200),
+	lastname varchar(200),
+	totalmatchesplayed int NULL,
+	contactnumber varchar(10),
+	email varchar(200),
+	password varchar(max),
+	dateofBirth datetime,
+	playerheight NUMERIC(4, 2) NULL,
+	playerweight NUMERIC(4, 2) NULL,
+    role int,
+	isselected bit null,
+	flagdeleted bit null
+)

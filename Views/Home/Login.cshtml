@@ -1,0 +1,38 @@
+﻿@model SagarPractical.ViewModels.clsPlayerViewModel
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts
+{
+    <script src="~/Scripts/player.js"></script>
+}
+
+<h2>Login</h2>
+
+
+@using (Html.BeginForm("Login", "Home", FormMethod.Post, new { @id = "frmPlayerLogin" }))
+{
+    <div class="row">
+        <div class="col col-lg-6">
+            <div class="form-group">
+                <label> First Name</label>
+                @Html.TextBoxFor(m => m.email, new { @id = "email", @class = "form-control" })
+                <div id="firstnameError" class="invalid-feedback" style="color:red; display:none">please enter email</div>
+            </div>
+        </div>
+        <div class="col col-lg-6">
+            <div class="form-group">
+                <label> Last Name</label>
+                @Html.TextBoxFor(m => m.password, new { @id = "password", @class = "form-control", @type = "password" })
+                <div id="lastnameError" class="invalid-feedback" style="color:red; display:none">please enter password</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top:5%">
+        <input type="submit" class="btn btn-default" id="btnSubmit" name="Submit" value="Submit" onclick="return ValidateLoginForm();" />
+    </div>
+
+}

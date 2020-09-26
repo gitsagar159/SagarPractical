@@ -1,0 +1,146 @@
+﻿@model List<SagarPractical.ViewModels.clsPlayerViewModel>
+@using SagarPractical.ViewModels;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    clsPlayerViewModel objPlayerDetails = (clsPlayerViewModel)ViewBag.PlayerDetails;
+
+    int intLoginPlayerRole = objPlayerDetails != null ? objPlayerDetails.role.Value : 0;
+
+    bool blnCaptionSelected = Model != null && Model.Count() > 0 ? Model.Where(x => x.role == 2).FirstOrDefault() != null ? true : false : false;
+
+    string strPlayerMsg = (string)ViewBag.PlayerMessage;
+
+    int intTemCount = Model != null && Model.Count() > 0 ? Model.Where(x => x.role == 3).ToList().Count() : 0;
+}
+
+@section scripts
+{
+    <script src="~/Scripts/player.js"></script>
+
+
+
+    <script>
+
+        var intteamCount = '@intTemCount';
+
+        $(document).ready(function () {
+
+            if ('@blnCaptionSelected.ToString().ToLower()' == "true") {
+
+                $(".caption-selection").attr("disabled", "disabled");
+            }
+
+            if (parseInt(intteamCount) == 10 || parseInt(intteamCount) > 10) {
+
+                $(".team-selection").attr("disabled", "disabled");
+            }
+        });
+
+
+
+        function ChooseCaption(objThis) {
+
+        var playerId = $(objThis).attr("data-payerid");
+
+            console.log(playerId);
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("SelectCaption", "Player")',
+                data: '{playerid: ' + JSON.stringify(playerId) + '}',
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    if (data.success) {
+                        $(".caption-selection").attr("disabled", "disabled");
+                    }
+                },
+                error: function () {
+                    alert("Error ");
+                }
+            });
+        }
+
+        function ChooseTeamMember(objThis) {
+
+            var playerId = $(objThis).attr("data-payerid");
+
+            console.log(playerId);
+
+             $.ajax({
+                type: "POST",
+                url: '@Url.Action("SelectTeam", "Player")',
+                data: '{playerid: ' + JSON.stringify(playerId) + '}',
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    if (data.success) {
+                        intteamCount == intteamCount + 1;
+                        $(objThis).attr("disabled", "disabled");
+                    }
+                },
+                error: function () {
+                    alert("Error ");
+                }
+            });
+        }
+
+    </script>
+}
+
+<div>
+    <div style="margin-bottom:20px">
+        <a href="@Url.Action("Logout", "Home")" class="btn btn-default"> Logout </a>
+    </div>
+    @if (objPlayerDetails != null && (objPlayerDetails.role == 1 || objPlayerDetails.role == 2))
+    {
+        <table class="table-responsive">
+            <tr>
+
+                <th width="10%">First Name</th>
+                <th width="10%">Lsat Name</th>
+                <th width="10%">Email</th>
+                <th width="10%">Actions</th>
+            </tr>
+            @if (Model != null && Model.Count() > 0)
+            {
+                foreach (var playerItem in Model)
+                {
+                    <tr>
+                        <td>@Html.Raw(playerItem.firstname)</td>
+                        <td>@Html.Raw(playerItem.lastname)</td>
+                        <td>@Html.Raw(playerItem.email)</td>
+                        <td>
+                            @if (intLoginPlayerRole == 1)
+                            {
+                                <input type="checkbox" class="caption-selection" onchange="ChooseCaption(this)" data-payerid="@playerItem.playerid" name="choosecaption_@playerItem.playerid" id="choosecaption_@playerItem.playerid" @Html.Raw(playerItem.role.Value == 2 ? "checked" : "") />
+                            }
+                            else if (intLoginPlayerRole == 2)
+                            {
+                                <input type="checkbox" class="team-selection" onchange="ChooseTeamMember(this)" data-payerid="@playerItem.playerid" name="chooseteammember_@playerItem.playerid" id="chooseteammember_@playerItem.playerid" @Html.Raw(playerItem.isselected.Value == true ? "checked" : "")  @Html.Raw(playerItem.isselected.Value == true ? "disabled='disabled'" : "") />
+                            }
+
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr style="margin-top:10px">
+                    <td colspan="5" style="text-align:center"> No Record found </td>
+                </tr>
+            }
+        </table>
+    }
+
+    @if (objPlayerDetails != null && (objPlayerDetails.role == 3))
+    {
+        <div class="alert alert-info"> @strPlayerMsg </div>
+    }
+
+</div>
+
+
+
